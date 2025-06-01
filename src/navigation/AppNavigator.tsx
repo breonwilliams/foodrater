@@ -8,6 +8,8 @@ import { CameraScreen } from '../screens/main/CameraScreen';
 import { LoadingScreen } from '../screens/main/LoadingScreen';
 import { ResultsScreen } from '../screens/main/ResultsScreen';
 import { ProgressScreen } from '../screens/main/ProgressScreen';
+import { FoodDetailsScreen } from '../screens/main/FoodDetailsScreen';
+import { SettingsScreen } from '../screens/settings/SettingsScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,8 @@ export const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Progress" component={ProgressScreen} />
+        <Stack.Screen name="FoodDetails" component={FoodDetailsScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -6,6 +6,8 @@ export type RootStackParamList = {
   Loading: undefined;
   Results: undefined;
   Progress: undefined;
+  FoodDetails: undefined;
+  Settings: undefined;
   // Add more screens as we create them
 };
 
