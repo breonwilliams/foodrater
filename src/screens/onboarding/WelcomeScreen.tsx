@@ -50,16 +50,16 @@ export const WelcomeScreen = () => {
         if (currentStep < onboardingData.length - 1) {
             setCurrentStep(currentStep + 1);
         } else {
-            navigation.navigate('Camera');
+            navigation.navigate('MainTabs');
         }
     };
 
     const handleSkip = () => {
-        navigation.navigate('Camera');
+        navigation.navigate('MainTabs');
     };
 
     const handleGetStarted = () => {
-        navigation.navigate('Camera');
+        navigation.navigate('MainTabs');
     };
 
     const currentData = onboardingData[currentStep];

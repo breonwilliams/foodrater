@@ -124,6 +124,17 @@ export const SettingsScreen = () => {
                         <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
                     </TouchableOpacity>
 
+                    <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('MainTabs')}>
+                        <View style={styles.settingIcon}>
+                            <Ionicons name="heart" size={20} color={theme.colors.light.textSecondary} />
+                        </View>
+                        <View style={styles.settingContent}>
+                            <Text style={styles.settingTitle}>Favorites</Text>
+                            <Text style={styles.settingSubtitle}>View your saved foods</Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
+                    </TouchableOpacity>
+
                     <TouchableOpacity style={styles.settingItem}>
                         <View style={styles.settingIcon}>
                             <Ionicons name="fitness" size={20} color={theme.colors.light.textSecondary} />

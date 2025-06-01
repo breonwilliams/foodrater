@@ -11,10 +11,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
-import type { RootStackParamList } from '../../types/navigation';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import type { MainTabParamList } from '../../types/navigation';
 
-type ProgressScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Progress'>;
+type ProgressScreenNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Progress'>;
 
 const { width } = Dimensions.get('window');
 
@@ -94,9 +94,6 @@ export const ProgressScreen = () => {
           </TouchableOpacity>
           <Text style={styles.pageTitle}>Your Progress</Text>
         </View>
-        <TouchableOpacity style={styles.themeToggle}>
-          <Ionicons name="sunny" size={16} color={theme.colors.light.textSecondary} />
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
@@ -311,14 +308,7 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.weights.semibold,
     color: theme.colors.light.textPrimary,
   },
-  themeToggle: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: theme.colors.light.bgTertiary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   mainContent: {
     flex: 1,
     padding: 20,

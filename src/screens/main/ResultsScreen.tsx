@@ -120,7 +120,7 @@ export const ResultsScreen = () => {
   };
 
   const handleScanAnother = () => {
-    navigation.navigate('Camera');
+    navigation.navigate('MainTabs');
   };
 
   return (
@@ -129,7 +129,7 @@ export const ResultsScreen = () => {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => navigation.navigate('Camera')}
+          onPress={() => navigation.navigate('MainTabs')}
         >
           <Ionicons name="arrow-back" size={20} color={theme.colors.light.textPrimary} />
         </TouchableOpacity>

@@ -16,12 +16,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../../styles/theme';
 import { useNavigation } from '@react-navigation/native';
+import type { CompositeNavigationProp } from '@react-navigation/native';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import type { RootStackParamList } from '../../types/navigation';
+import type { MainTabParamList, RootStackParamList } from '../../types/navigation';
 
-type CameraScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Camera'>;
+type CameraScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabParamList, 'Camera'>,
+  StackNavigationProp<RootStackParamList>
+>;
 
 export const CameraScreen = () => {
     const [hasImage, setHasImage] = useState(false);
@@ -30,9 +36,10 @@ export const CameraScreen = () => {
     const [foodDetails, setFoodDetails] = useState('');
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const [hasGalleryPermission, setHasGalleryPermission] = useState<boolean | null>(null);
+    const [showFloatingTip, setShowFloatingTip] = useState(false);
     const navigation = useNavigation<CameraScreenNavigationProp>();
 
-    // Request permissions on component mount
+    // Request permissions and check if first time user
     useEffect(() => {
         (async () => {
             // Request camera permission
@@ -42,8 +49,46 @@ export const CameraScreen = () => {
             // Request gallery permission
             const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
             setHasGalleryPermission(galleryStatus.status === 'granted');
+
+            // Check if user has seen the tip before
+            try {
+                const hasSeenTip = await AsyncStorage.getItem('hasSeenCameraTip');
+                if (!hasSeenTip) {
+                    setShowFloatingTip(true);
+                }
+            } catch (error) {
+                console.log('Error checking tip status:', error);
+                setShowFloatingTip(true); // Show tip if we can't check
+            }
         })();
     }, []);
+
+    // Hide tip when user navigates away
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            if (showFloatingTip) {
+                hideTipPermanently();
+            }
+        });
+
+        return unsubscribe;
+    }, [navigation, showFloatingTip]);
+
+    const hideTipPermanently = async () => {
+        try {
+            await AsyncStorage.setItem('hasSeenCameraTip', 'true');
+            setShowFloatingTip(false);
+        } catch (error) {
+            console.log('Error saving tip status:', error);
+            setShowFloatingTip(false); // Hide anyway
+        }
+    };
+
+    const handleScroll = () => {
+        if (showFloatingTip) {
+            setShowFloatingTip(false);
+        }
+    };
 
     const handleTakePhoto = async () => {
         if (hasCameraPermission === null) {
@@ -79,6 +124,10 @@ export const CameraScreen = () => {
             if (!result.canceled && result.assets[0]) {
                 setImageUri(result.assets[0].uri);
                 setHasImage(true);
+                // Hide tip permanently when user takes a photo
+                if (showFloatingTip) {
+                    hideTipPermanently();
+                }
             }
         } catch (error) {
             Alert.alert('Error', 'Failed to take photo. Please try again.');
@@ -119,6 +168,10 @@ export const CameraScreen = () => {
             if (!result.canceled && result.assets[0]) {
                 setImageUri(result.assets[0].uri);
                 setHasImage(true);
+                // Hide tip permanently when user selects from gallery
+                if (showFloatingTip) {
+                    hideTipPermanently();
+                }
             }
         } catch (error) {
             Alert.alert('Error', 'Failed to select photo. Please try again.');
@@ -172,7 +225,11 @@ export const CameraScreen = () => {
                 </View>
             </View>
 
-            <ScrollView style={styles.mainContent}>
+            <ScrollView 
+                style={styles.mainContent}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+            >
                 {/* Welcome Section */}
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeTitle}>Ready to rate your food?</Text>
@@ -219,7 +276,7 @@ export const CameraScreen = () => {
                             <Ionicons name="camera" size={32} color="white" />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.btnSecondary} onPress={() => console.log('History')}>
+                        <TouchableOpacity style={styles.btnSecondary} onPress={() => navigation.navigate('History')}>
                             <Ionicons name="time" size={20} color={theme.colors.light.textTertiary} />
                         </TouchableOpacity>
                     </View>
@@ -288,9 +345,16 @@ export const CameraScreen = () => {
             </ScrollView>
 
             {/* Floating Tip */}
-            {!hasImage && (
+            {!hasImage && showFloatingTip && (
                 <View style={styles.floatingTip}>
-                    <Text style={styles.floatingTipText}>Tap the camera to get started!</Text>
+                    <TouchableOpacity 
+                        style={styles.floatingTipContainer}
+                        onPress={hideTipPermanently}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={styles.floatingTipText}>Tap the camera to get started!</Text>
+                        <Ionicons name="close" size={14} color={theme.colors.light.accentDark} style={styles.floatingTipClose} />
+                    </TouchableOpacity>
                 </View>
             )}
 
@@ -675,21 +739,29 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 80,
         left: '50%',
-        transform: [{ translateX: -100 }],
-        backgroundColor: theme.colors.light.accentYellow,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 20,
+        transform: [{ translateX: -110 }],
         shadowColor: 'rgba(255, 218, 128, 0.4)',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 1,
         shadowRadius: 16,
         elevation: 5,
     },
+    floatingTipContainer: {
+        backgroundColor: theme.colors.light.accentYellow,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
     floatingTipText: {
         fontSize: 12,
         fontWeight: theme.typography.weights.medium,
         color: theme.colors.light.accentDark,
+    },
+    floatingTipClose: {
+        opacity: 0.7,
     },
     // Modal Styles
     modalContainer: {

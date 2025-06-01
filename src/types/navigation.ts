@@ -2,13 +2,19 @@ export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   Welcome: undefined;
-  Camera: undefined;
+  MainTabs: undefined;
   Loading: undefined;
   Results: undefined;
-  Progress: undefined;
-  FoodDetails: undefined;
+  FoodDetails: { foodId?: string } | undefined;
   Settings: undefined;
   // Add more screens as we create them
+};
+
+export type MainTabParamList = {
+  Camera: undefined;
+  History: undefined;
+  Favorites: undefined;
+  Progress: undefined;
 };
 
 declare global {

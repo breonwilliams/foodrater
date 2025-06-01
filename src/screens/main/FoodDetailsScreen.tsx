@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,9 @@ import {
   Dimensions,
   Image,
   Share,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
@@ -101,7 +103,63 @@ const foodData = {
 
 export const FoodDetailsScreen = () => {
   const [selectedTab, setSelectedTab] = useState<'overview' | 'nutrition' | 'analysis'>('overview');
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation<FoodDetailsScreenNavigationProp>();
+
+  // Check if food is already in favorites on component mount
+  useEffect(() => {
+    checkIfFavorite();
+  }, []);
+
+  const checkIfFavorite = async () => {
+    try {
+      const favoritesJson = await AsyncStorage.getItem('favorites');
+      if (favoritesJson) {
+        const favorites = JSON.parse(favoritesJson);
+        const isAlreadyFavorite = favorites.some((fav: any) => fav.id === foodData.id);
+        setIsFavorite(isAlreadyFavorite);
+      }
+    } catch (error) {
+      console.error('Error checking favorites:', error);
+    }
+  };
+
+  const saveFavorite = async () => {
+    try {
+      const favoritesJson = await AsyncStorage.getItem('favorites');
+      const favorites = favoritesJson ? JSON.parse(favoritesJson) : [];
+      
+      // Add current food to favorites with timestamp
+      const favoriteFood = {
+        ...foodData,
+        savedAt: new Date().toISOString(),
+      };
+      
+      favorites.push(favoriteFood);
+      await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
+      
+      return true;
+    } catch (error) {
+      console.error('Error saving favorite:', error);
+      return false;
+    }
+  };
+
+  const removeFavorite = async () => {
+    try {
+      const favoritesJson = await AsyncStorage.getItem('favorites');
+      if (favoritesJson) {
+        const favorites = JSON.parse(favoritesJson);
+        const updatedFavorites = favorites.filter((fav: any) => fav.id !== foodData.id);
+        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      }
+      return true;
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+      return false;
+    }
+  };
 
   const getRatingColor = (score: number) => {
     if (score >= 8.0) return '#10b981'; // Green
@@ -126,9 +184,45 @@ export const FoodDetailsScreen = () => {
     }
   };
 
-  const handleSaveToFavorites = () => {
-    // Add to favorites logic
-    console.log('Added to favorites');
+  const handleSaveToFavorites = async () => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    
+    try {
+      if (isFavorite) {
+        // Remove from favorites
+        const success = await removeFavorite();
+        if (success) {
+          setIsFavorite(false);
+          Alert.alert(
+            'Removed from Favorites',
+            `${foodData.name} has been removed from your favorites.`,
+            [{ text: 'OK' }]
+          );
+        } else {
+          Alert.alert('Error', 'Failed to remove from favorites. Please try again.');
+        }
+      } else {
+        // Add to favorites
+        const success = await saveFavorite();
+        if (success) {
+          setIsFavorite(true);
+          Alert.alert(
+            'Added to Favorites',
+            `${foodData.name} has been saved to your favorites!`,
+            [{ text: 'OK' }]
+          );
+        } else {
+          Alert.alert('Error', 'Failed to save to favorites. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.error('Error handling favorites:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -143,8 +237,20 @@ export const FoodDetailsScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Food Details</Text>
         <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.actionButton} onPress={handleSaveToFavorites}>
-            <Ionicons name="heart-outline" size={20} color={theme.colors.light.textPrimary} />
+          <TouchableOpacity 
+            style={[
+              styles.actionButton,
+              isFavorite && styles.favoriteButton,
+              isLoading && styles.loadingButton
+            ]} 
+            onPress={handleSaveToFavorites}
+            disabled={isLoading}
+          >
+            <Ionicons 
+              name={isFavorite ? "heart" : "heart-outline"} 
+              size={20} 
+              color={isFavorite ? "#ef4444" : theme.colors.light.textPrimary} 
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
             <Ionicons name="share-outline" size={20} color={theme.colors.light.textPrimary} />
@@ -357,7 +463,7 @@ export const FoodDetailsScreen = () => {
             <Text style={styles.secondaryActionText}>Compare Foods</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.primaryAction} onPress={() => navigation.navigate('Camera')}>
+          <TouchableOpacity style={styles.primaryAction} onPress={() => navigation.navigate('MainTabs')}>
             <Ionicons name="camera" size={20} color="white" />
             <Text style={styles.primaryActionText}>Scan Another</Text>
           </TouchableOpacity>
@@ -409,6 +515,14 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.light.bgTertiary,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  favoriteButton: {
+    backgroundColor: '#fef2f2',
+    borderWidth: 1,
+    borderColor: '#fecaca',
+  },
+  loadingButton: {
+    opacity: 0.6,
   },
   content: {
     flex: 1,
