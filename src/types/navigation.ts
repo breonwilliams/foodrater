@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Results: undefined;
   FoodDetails: { foodId?: string } | undefined;
   Settings: undefined;
+  HealthGoals: undefined;
   // Add more screens as we create them
 };
 

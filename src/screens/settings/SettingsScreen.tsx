@@ -135,7 +135,7 @@ export const SettingsScreen = () => {
                         <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.settingItem}>
+                    <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('HealthGoals')}>
                         <View style={styles.settingIcon}>
                             <Ionicons name="fitness" size={20} color={theme.colors.light.textSecondary} />
                         </View>

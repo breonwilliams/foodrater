@@ -8,6 +8,7 @@ import { LoadingScreen } from '../screens/main/LoadingScreen';
 import { ResultsScreen } from '../screens/main/ResultsScreen';
 import { FoodDetailsScreen } from '../screens/main/FoodDetailsScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
+import { HealthGoalsScreen } from '../screens/settings/HealthGoalsScreen';
 import { MainTabNavigator } from './MainTabNavigator';
 
 const Stack = createStackNavigator();
@@ -29,6 +30,7 @@ export const AppNavigator = () => {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="FoodDetails" component={FoodDetailsScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="HealthGoals" component={HealthGoalsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
