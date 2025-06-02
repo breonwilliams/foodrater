@@ -10,6 +10,10 @@ export type RootStackParamList = {
   HealthGoals: undefined;
   Favorites: { from?: string } | undefined;
   ProfileInformation: undefined;
+  HelpSupport: undefined;
+  ClearCache: undefined;
+  PrivacyPolicy: undefined;
+  TermsOfService: undefined;
   // Add more screens as we create them
 };
 

@@ -72,25 +72,15 @@ export const SettingsScreen = () => {
     };
 
     const openPrivacyPolicy = () => {
-        // Would open privacy policy URL or navigate to privacy screen
-        console.log('Opening privacy policy');
+        navigation.navigate('PrivacyPolicy');
     };
 
     const openTermsOfService = () => {
-        // Would open terms URL or navigate to terms screen
-        console.log('Opening terms of service');
+        navigation.navigate('TermsOfService');
     };
 
     const contactSupport = () => {
-        Alert.alert(
-            'Contact Support',
-            'How would you like to contact us?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                { text: 'Email Support', onPress: () => console.log('Opening email...') },
-                { text: 'Report Bug', onPress: () => console.log('Opening bug report...') }
-            ]
-        );
+        navigation.navigate('HelpSupport');
     };
 
     return (
@@ -244,7 +234,7 @@ export const SettingsScreen = () => {
                         <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.settingItem, styles.settingItemLast]}>
+                    <TouchableOpacity style={[styles.settingItem, styles.settingItemLast]} onPress={() => navigation.navigate('ClearCache')}>
                         <View style={styles.settingIcon}>
                             <Ionicons name="trash" size={20} color={theme.colors.light.textSecondary} />
                         </View>

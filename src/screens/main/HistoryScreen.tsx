@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.light.bgPrimary,
     borderRadius: 12,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 12,
     gap: 8,
   },
   searchInput: {
