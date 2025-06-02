@@ -5,7 +5,7 @@ export type RootStackParamList = {
   MainTabs: { screen?: keyof MainTabParamList; params?: { from?: string } } | undefined;
   Loading: undefined;
   Results: undefined;
-  FoodDetails: { foodId?: string } | undefined;
+  FoodDetails: { food: any } | undefined;
   Settings: undefined;
   HealthGoals: undefined;
   Favorites: { from?: string } | undefined;
@@ -22,6 +22,7 @@ export type MainTabParamList = {
   History: undefined;
   HealthGoals: undefined;
   Progress: undefined;
+  Favorites: undefined;
 };
 
 declare global {

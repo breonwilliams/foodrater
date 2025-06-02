@@ -13,6 +13,11 @@ import { Ionicons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../styles/theme';
 
+interface GoalColors {
+    main: string;
+    background: string;
+    icon: string;
+}
 
 interface GoalData {
     id: 'healthyMeals' | 'consistency' | 'quality';
@@ -38,6 +43,36 @@ interface BottomSheetProps {
     onSave: (goalId: string, newTarget: number) => void;
 }
 
+// Goal color configuration
+const getGoalColors = (goalId: string): GoalColors => {
+    switch (goalId) {
+        case 'healthyMeals':
+            return {
+                main: '#10b981',
+                background: '#10b98120',
+                icon: '#10b981'
+            };
+        case 'consistency':
+            return {
+                main: '#3b82f6',
+                background: '#3b82f620',
+                icon: '#3b82f6'
+            };
+        case 'quality':
+            return {
+                main: '#8b5cf6',
+                background: '#8b5cf620',
+                icon: '#8b5cf6'
+            };
+        default:
+            return {
+                main: theme.colors.light.accentDark,
+                background: theme.colors.light.bgTertiary,
+                icon: theme.colors.light.accentDark
+            };
+    }
+};
+
 const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSave }) => {
     const [tempValue, setTempValue] = useState(goal?.targetValue || 0);
 
@@ -48,6 +83,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSav
     }, [goal]);
 
     if (!goal) return null;
+
+    const goalColors = getGoalColors(goal.id);
 
     const handleSave = () => {
         onSave(goal.id, tempValue);
@@ -78,7 +115,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSav
                                 <Ionicons 
                                     name="information-circle" 
                                     size={20} 
-                                    color={theme.colors.light.accentDark} 
+                                    color={goalColors.main} 
                                 />
                                 <Text style={styles.infoHeaderText}>Goal Description</Text>
                             </View>
@@ -90,7 +127,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSav
                                 <Ionicons 
                                     name="cog" 
                                     size={20} 
-                                    color={theme.colors.light.accentDark} 
+                                    color={goalColors.main} 
                                 />
                                 <Text style={styles.infoHeaderText}>How It Works</Text>
                             </View>
@@ -102,7 +139,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSav
                                 <Ionicons 
                                     name="bulb" 
                                     size={20} 
-                                    color={theme.colors.light.accentDark} 
+                                    color={goalColors.main} 
                                 />
                                 <Text style={styles.infoHeaderText}>Tips for Success</Text>
                             </View>
@@ -139,14 +176,14 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSav
                                 step={goal.step}
                                 value={tempValue}
                                 onValueChange={setTempValue}
-                                minimumTrackTintColor={theme.colors.light.accentDark}
+                                minimumTrackTintColor={goalColors.main}
                                 maximumTrackTintColor={theme.colors.light.borderLight}
-                                thumbTintColor={theme.colors.light.accentDark}
+                                thumbTintColor={goalColors.main}
                             />
                             
                             <View style={styles.newValueContainer}>
                                 <Text style={styles.newValueLabel}>New Target:</Text>
-                                <Text style={styles.newValueText}>
+                                <Text style={[styles.newValueText, { color: goalColors.main }]}>
                                     {goal.formatValue(tempValue)}
                                 </Text>
                             </View>
@@ -156,7 +193,10 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ visible, onClose, goal, onSav
 
                 {/* Save Button */}
                 <View style={styles.bottomSheetFooter}>
-                    <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                    <TouchableOpacity 
+                        style={[styles.saveButton, { backgroundColor: goalColors.main }]} 
+                        onPress={handleSave}
+                    >
                         <Text style={styles.saveButtonText}>Save Changes</Text>
                     </TouchableOpacity>
                 </View>
@@ -171,15 +211,17 @@ interface GoalCardProps {
 }
 
 const GoalCard: React.FC<GoalCardProps> = ({ goal, onThreeDotsPress }) => {
+    const goalColors = getGoalColors(goal.id);
+    
     // Calculate progress percentage
     const progressPercentage = (goal.currentValue / goal.targetValue) * 100;
 
     // Badge status calculation
-    const getStatusBadge = (percentage: number, isQuality: boolean = false) => {
+    const getStatusBadge = (percentage: number, isQuality: boolean = false, colors: GoalColors) => {
         if (percentage >= 100) {
             return isQuality 
-                ? { text: 'Excellent', color: '#FFFFFF', bgColor: '#10B981' }
-                : { text: 'Complete', color: '#FFFFFF', bgColor: '#10B981' };
+                ? { text: 'Excellent!', color: '#FFFFFF', bgColor: colors.main }
+                : { text: 'Complete ✓', color: '#FFFFFF', bgColor: colors.main };
         } else if (percentage >= 70) {
             return { text: 'Almost There', color: '#FFFFFF', bgColor: '#3B82F6' };
         } else if (percentage >= 50) {
@@ -189,17 +231,20 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal, onThreeDotsPress }) => {
         }
     };
 
-    const statusBadge = getStatusBadge(progressPercentage, goal.id === 'quality');
+    const statusBadge = getStatusBadge(progressPercentage, goal.id === 'quality', goalColors);
 
     return (
         <View style={styles.goalCard}>
             <View style={styles.goalHeader}>
                 <View style={styles.goalLeftSection}>
-                    <View style={styles.goalIconContainer}>
+                    <View style={[
+                        styles.goalIconContainer,
+                        { backgroundColor: goalColors.background }
+                    ]}>
                         <Ionicons 
                             name={goal.iconName as any} 
                             size={24} 
-                            color={theme.colors.light.accentDark} 
+                            color={goalColors.icon} 
                         />
                     </View>
                     <View style={styles.goalInfo}>
@@ -245,7 +290,10 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal, onThreeDotsPress }) => {
                         <View 
                             style={[
                                 styles.progressBarFill, 
-                                { width: `${Math.min(progressPercentage, 100)}%` }
+                                { 
+                                    width: `${Math.min(progressPercentage, 100)}%`,
+                                    backgroundColor: goalColors.main
+                                }
                             ]} 
                         />
                     </View>
@@ -508,7 +556,6 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         borderRadius: 12,
-        backgroundColor: theme.colors.light.bgTertiary,
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 12,
@@ -569,7 +616,6 @@ const styles = StyleSheet.create({
     },
     progressBarFill: {
         height: '100%',
-        backgroundColor: theme.colors.light.accentDark,
         borderRadius: 4,
     },
     tipsSection: {
@@ -734,7 +780,6 @@ const styles = StyleSheet.create({
         height: 40,
         marginBottom: 16,
     },
-
     newValueContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -751,7 +796,6 @@ const styles = StyleSheet.create({
     newValueText: {
         fontSize: 18,
         fontWeight: theme.typography.weights.bold,
-        color: theme.colors.light.accentDark,
     },
     bottomSheetFooter: {
         padding: 20,
@@ -760,7 +804,6 @@ const styles = StyleSheet.create({
         borderTopColor: theme.colors.light.borderLight,
     },
     saveButton: {
-        backgroundColor: theme.colors.light.accentDark,
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',

@@ -60,17 +60,6 @@ export const SettingsScreen = () => {
         );
     };
 
-    const handleExportData = () => {
-        Alert.alert(
-            'Export Data',
-            'Your food analysis history will be exported as a CSV file.',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                { text: 'Export', onPress: () => console.log('Exporting data...') }
-            ]
-        );
-    };
-
     const openPrivacyPolicy = () => {
         navigation.navigate('PrivacyPolicy');
     };
@@ -175,7 +164,7 @@ export const SettingsScreen = () => {
                         />
                     </View>
 
-                    <View style={styles.settingItem}>
+                    <View style={[styles.settingItem, styles.settingItemLast]}>
                         <View style={styles.settingIcon}>
                             <Ionicons name="image" size={20} color={theme.colors.light.textSecondary} />
                         </View>
@@ -190,17 +179,6 @@ export const SettingsScreen = () => {
                             thumbColor="white"
                         />
                     </View>
-
-                    <TouchableOpacity style={[styles.settingItem, styles.settingItemLast]}>
-                        <View style={styles.settingIcon}>
-                            <Ionicons name="language" size={20} color={theme.colors.light.textSecondary} />
-                        </View>
-                        <View style={styles.settingContent}>
-                            <Text style={styles.settingTitle}>Language</Text>
-                            <Text style={styles.settingSubtitle}>English (US)</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
-                    </TouchableOpacity>
                 </View>
 
                 {/* Privacy & Data */}
@@ -222,17 +200,6 @@ export const SettingsScreen = () => {
                             thumbColor="white"
                         />
                     </View>
-
-                    <TouchableOpacity style={styles.settingItem} onPress={handleExportData}>
-                        <View style={styles.settingIcon}>
-                            <Ionicons name="download" size={20} color={theme.colors.light.textSecondary} />
-                        </View>
-                        <View style={styles.settingContent}>
-                            <Text style={styles.settingTitle}>Export Data</Text>
-                            <Text style={styles.settingSubtitle}>Download your food history</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
-                    </TouchableOpacity>
 
                     <TouchableOpacity style={[styles.settingItem, styles.settingItemLast]} onPress={() => navigation.navigate('ClearCache')}>
                         <View style={styles.settingIcon}>

@@ -127,7 +127,7 @@ export const FavoritesScreen = () => {
   };
 
   const handleFoodPress = (food: FavoriteFood) => {
-    navigation.navigate('FoodDetails', { foodId: food.id });
+    navigation.navigate('FoodDetails', { food });
   };
 
   const handleBackPress = () => {

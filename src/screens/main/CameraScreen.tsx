@@ -321,27 +321,8 @@ export const CameraScreen = () => {
                     </View>
                 </View>
 
-                {/* Recent Scans */}
-                <View style={styles.recentSection}>
-                    <Text style={styles.sectionTitle}>Recent Scans</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.recentGrid}>
-                        {[8.5, 6.2, 9.1].map((rating, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={styles.recentItem}
-                                onPress={() => navigation.navigate('FoodDetails')}
-                            >
-                                <View style={styles.recentImage}>
-                                    <Ionicons name="star" size={24} color={theme.colors.light.textSecondary} />
-                                </View>
-                                <View style={styles.recentInfo}>
-                                    <Text style={styles.recentRating}>{rating}</Text>
-                                    <Text style={styles.recentDate}>{index === 0 ? '2 hours ago' : index === 1 ? '1 day ago' : '2 days ago'}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                </View>
+                {/* Bottom Padding */}
+                <View style={styles.bottomPadding} />
             </ScrollView>
 
             {/* Floating Tip */}
@@ -693,47 +674,8 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontWeight: theme.typography.weights.medium,
     },
-    recentSection: {
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: theme.typography.weights.semibold,
-        color: theme.colors.light.textPrimary,
-        marginBottom: 16,
-    },
-    recentGrid: {
-        flexDirection: 'row',
-    },
-    recentItem: {
-        width: 120,
-        backgroundColor: theme.colors.light.bgSecondary,
-        borderRadius: 12,
-        overflow: 'hidden',
-        marginRight: 12,
-        borderWidth: 1,
-        borderColor: theme.colors.light.borderLight,
-    },
-    recentImage: {
-        width: 120,
-        height: 120,
-        backgroundColor: theme.colors.light.bgTertiary,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    recentInfo: {
-        padding: 12,
-    },
-    recentRating: {
-        fontSize: 16,
-        fontWeight: theme.typography.weights.bold,
-        color: theme.colors.light.textPrimary,
-    },
-    recentDate: {
-        fontSize: 11,
-        color: theme.colors.light.textMuted,
-        marginTop: 4,
+    bottomPadding: {
+        height: 40,
     },
     floatingTip: {
         position: 'absolute',

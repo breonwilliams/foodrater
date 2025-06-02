@@ -59,18 +59,153 @@ const periodLabels = {
   alltime: 'Last 6 months',
 };
 
+// Enhanced recent foods data with full food details for navigation
 const recentFoods = [
-  { name: 'Quinoa Salad Bowl', rating: 8.5, time: '2 hours ago', color: '#10b981' },
-  { name: 'Greek Yogurt', rating: 9.1, time: '5 hours ago', color: '#10b981' },
-  { name: 'Processed Snack', rating: 3.2, time: 'Yesterday', color: '#ef4444' },
-  { name: 'Smoothie Bowl', rating: 7.8, time: '2 days ago', color: '#f59e0b' },
+  { 
+    id: 'food_1',
+    name: 'Quinoa Salad Bowl', 
+    rating: 8.5, 
+    time: '2 hours ago', 
+    color: '#10b981',
+    image: null,
+    date: new Date().toISOString(),
+    calories: 420,
+    protein: 18,
+    carbs: 52,
+    fat: 14,
+    fiber: 8,
+    sugar: 6,
+    sodium: 380,
+    healthScores: {
+      nutritional: 8.5,
+      processing: 9.0,
+      ingredients: 8.8,
+      allergens: 7.2,
+      sustainability: 8.0,
+      overall: 8.3
+    },
+    ingredients: ['Quinoa', 'Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Feta cheese', 'Olive oil', 'Lemon juice'],
+    description: 'A nutritious and balanced salad bowl with quinoa, fresh vegetables, and feta cheese.',
+    recommendations: [
+      'Excellent source of complete protein from quinoa',
+      'Rich in fiber and essential nutrients',
+      'Well-balanced macronutrient profile'
+    ]
+  },
+  { 
+    id: 'food_2',
+    name: 'Greek Yogurt', 
+    rating: 9.1, 
+    time: '5 hours ago', 
+    color: '#10b981',
+    image: null,
+    date: new Date().toISOString(),
+    calories: 150,
+    protein: 20,
+    carbs: 8,
+    fat: 4,
+    fiber: 0,
+    sugar: 8,
+    sodium: 65,
+    healthScores: {
+      nutritional: 9.2,
+      processing: 8.8,
+      ingredients: 9.5,
+      allergens: 8.0,
+      sustainability: 8.5,
+      overall: 9.1
+    },
+    ingredients: ['Greek yogurt', 'Live cultures'],
+    description: 'Plain Greek yogurt with live and active cultures.',
+    recommendations: [
+      'Excellent source of probiotics',
+      'High protein content supports muscle health',
+      'Low in added sugars'
+    ]
+  },
+  { 
+    id: 'food_3',
+    name: 'Processed Snack', 
+    rating: 3.2, 
+    time: 'Yesterday', 
+    color: '#ef4444',
+    image: null,
+    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    calories: 280,
+    protein: 3,
+    carbs: 35,
+    fat: 15,
+    fiber: 2,
+    sugar: 18,
+    sodium: 520,
+    healthScores: {
+      nutritional: 2.8,
+      processing: 2.0,
+      ingredients: 3.5,
+      allergens: 4.0,
+      sustainability: 3.2,
+      overall: 3.2
+    },
+    ingredients: ['Corn', 'Vegetable oil', 'Salt', 'Artificial flavoring', 'Preservatives'],
+    description: 'Highly processed snack food with artificial ingredients.',
+    recommendations: [
+      'Consider healthier snack alternatives',
+      'High in sodium - limit intake',
+      'Low nutritional value per calorie'
+    ]
+  },
+  { 
+    id: 'food_4',
+    name: 'Smoothie Bowl', 
+    rating: 7.8, 
+    time: '2 days ago', 
+    color: '#f59e0b',
+    image: null,
+    date: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
+    calories: 320,
+    protein: 12,
+    carbs: 45,
+    fat: 8,
+    fiber: 10,
+    sugar: 28,
+    sodium: 85,
+    healthScores: {
+      nutritional: 8.0,
+      processing: 8.5,
+      ingredients: 7.8,
+      allergens: 7.5,
+      sustainability: 7.2,
+      overall: 7.8
+    },
+    ingredients: ['Acai puree', 'Banana', 'Blueberries', 'Granola', 'Chia seeds', 'Honey'],
+    description: 'Acai smoothie bowl topped with fresh fruits and granola.',
+    recommendations: [
+      'Rich in antioxidants from berries',
+      'Good source of fiber',
+      'Watch portion size due to natural sugars'
+    ]
+  },
 ];
 
 const healthGoals = [
   { title: 'Healthy Eating', progress: '5/5', completed: true, icon: 'leaf-outline', iconColor: '#10b981' },
-  { title: 'Food Quality', progress: '7.2', completed: true, icon: 'star-outline', iconColor: '#f59e0b' },
+  { title: 'Food Quality', progress: '7.2', completed: true, icon: 'star-outline', iconColor: '#8b5cf6' },
   { title: 'Stay Consistent', progress: '4/7', completed: false, icon: 'calendar-outline', iconColor: '#3b82f6' },
 ];
+
+// Goal icon background colors
+const getGoalIconStyle = (iconColor: string) => {
+  switch (iconColor) {
+    case '#10b981': // Healthy Eating - Green
+      return { backgroundColor: '#10b98120' };
+    case '#3b82f6': // Stay Consistent - Blue  
+      return { backgroundColor: '#3b82f620' };
+    case '#8b5cf6': // Food Quality - Purple
+      return { backgroundColor: '#8b5cf620' };
+    default:
+      return { backgroundColor: theme.colors.light.bgTertiary };
+  }
+};
 
 export const ProgressScreen = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('weekly');
@@ -83,6 +218,10 @@ export const ProgressScreen = () => {
     if (rating >= 6.0) return '#3b82f6'; // Good - Blue  
     if (rating >= 4.0) return '#f59e0b'; // Average - Yellow
     return '#ef4444'; // Poor - Red
+  };
+
+  const handleFoodPress = (food: typeof recentFoods[0]) => {
+    navigation.navigate('FoodDetails', { food });
   };
 
   return (
@@ -188,7 +327,7 @@ export const ProgressScreen = () => {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>This Month</Text>
             <View style={styles.timePeriod}>
-              <Text style={styles.timePeriodText}>December 2024</Text>
+              <Text style={styles.timePeriodText}>June 2025</Text>
             </View>
           </View>
           
@@ -219,7 +358,12 @@ export const ProgressScreen = () => {
           
           <View style={styles.foodList}>
             {recentFoods.map((food, index) => (
-              <TouchableOpacity key={index} style={styles.foodItem}>
+              <TouchableOpacity 
+                key={index} 
+                style={styles.foodItem}
+                onPress={() => handleFoodPress(food)}
+                activeOpacity={0.7}
+              >
                 <View style={styles.foodImage}>
                   <Ionicons name="star" size={20} color={theme.colors.light.textSecondary} />
                 </View>
@@ -252,7 +396,7 @@ export const ProgressScreen = () => {
             {healthGoals.map((goal, index) => (
               <View key={index} style={styles.goalItem}>
                 <View style={styles.goalInfo}>
-                  <View style={styles.goalIcon}>
+                  <View style={[styles.goalIcon, getGoalIconStyle(goal.iconColor)]}>
                     <Ionicons name={goal.icon as any} size={18} color={goal.iconColor} />
                   </View>
                   <Text style={styles.goalText}>{goal.title}</Text>
@@ -511,12 +655,10 @@ const styles = StyleSheet.create({
   goalIcon: {
     width: 32,
     height: 32,
-    backgroundColor: theme.colors.light.bgTertiary,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   goalText: {
     fontSize: 14,
     fontWeight: theme.typography.weights.medium,

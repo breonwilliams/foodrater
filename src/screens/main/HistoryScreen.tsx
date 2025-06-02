@@ -8,6 +8,7 @@ import {
   TextInput,
   SectionList,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,7 +27,7 @@ type HistoryScreenNavigationProp = CompositeNavigationProp<
 const { width } = Dimensions.get('window');
 
 // Mock history data organized by date
-const mockHistoryData = [
+const initialHistoryData = [
   {
     title: 'Today',
     data: [
@@ -160,6 +161,7 @@ export const HistoryScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const [historyData, setHistoryData] = useState(initialHistoryData);
   const navigation = useNavigation<HistoryScreenNavigationProp>();
 
   const filterFoodsByRating = (foods: any[]) => {
@@ -188,7 +190,7 @@ export const HistoryScreen = () => {
   };
 
   const getFilteredData = () => {
-    return mockHistoryData.map(section => ({
+    return historyData.map(section => ({
       ...section,
       data: filterFoodsBySearch(filterFoodsByRating(section.data))
     })).filter(section => section.data.length > 0);
@@ -200,7 +202,43 @@ export const HistoryScreen = () => {
 
   const handleFoodPress = (food: any) => {
     // Navigate to FoodDetailsScreen with the food data
-    navigation.navigate('FoodDetails', { foodId: food.id });
+    navigation.navigate('FoodDetails', { food });
+  };
+
+  const handleDeleteFood = (foodId: string, foodName: string) => {
+    Alert.alert(
+      'Delete Food',
+      `Are you sure you want to delete "${foodName}" from your history? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            // Remove the food item from history data
+            const updatedHistoryData = historyData.map(section => ({
+              ...section,
+              data: section.data.filter(food => food.id !== foodId)
+            })).filter(section => section.data.length > 0);
+            
+            setHistoryData(updatedHistoryData);
+            
+            // Show success feedback
+            Alert.alert('Deleted', `"${foodName}" has been removed from your history.`);
+            
+            // In a real app, you would also remove from AsyncStorage here
+            console.log(`Deleted food with ID: ${foodId}`);
+          },
+        },
+      ]
+    );
+  };
+
+  const handleFoodLongPress = (food: any) => {
+    handleDeleteFood(food.id, food.name);
   };
 
   const getRatingLabel = (rating: number) => {
@@ -211,7 +249,12 @@ export const HistoryScreen = () => {
   };
 
   const renderFoodItem = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.foodItem} onPress={() => handleFoodPress(item)}>
+    <TouchableOpacity 
+      style={styles.foodItem} 
+      onPress={() => handleFoodPress(item)}
+      onLongPress={() => handleFoodLongPress(item)}
+      delayLongPress={500}
+    >
       <View style={styles.foodImage}>
         <Ionicons name="restaurant" size={20} color={theme.colors.light.textSecondary} />
       </View>
@@ -306,6 +349,7 @@ export const HistoryScreen = () => {
           {totalCount} {totalCount === 1 ? 'food' : 'foods'} found
           {selectedFilter !== 'all' && ` • ${filterOptions.find(f => f.id === selectedFilter)?.label}`}
         </Text>
+        <Text style={styles.deleteHint}>Hold any item to delete</Text>
       </View>
 
       {/* History List */}
@@ -363,7 +407,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.light.borderLight,
   },
-
   headerTitle: {
     fontSize: 18,
     fontWeight: theme.typography.weights.semibold,
@@ -428,6 +471,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   summaryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 12,
     backgroundColor: theme.colors.light.bgSecondary,
@@ -436,6 +482,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: theme.colors.light.textSecondary,
     fontWeight: theme.typography.weights.medium,
+  },
+  deleteHint: {
+    fontSize: 11,
+    color: theme.colors.light.textMuted,
+    fontStyle: 'italic',
   },
   historyList: {
     flex: 1,
