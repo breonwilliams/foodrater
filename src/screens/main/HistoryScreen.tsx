@@ -246,15 +246,7 @@ export const HistoryScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={20} color={theme.colors.light.textPrimary} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Food History</Text>
-        </View>
+        <Text style={styles.headerTitle}>Food History</Text>
         <TouchableOpacity 
           style={styles.filterButton}
           onPress={() => setShowFilters(!showFilters)}
@@ -371,19 +363,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.light.borderLight,
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: theme.colors.light.bgTertiary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: theme.typography.weights.semibold,

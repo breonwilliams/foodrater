@@ -9,6 +9,8 @@ import { ResultsScreen } from '../screens/main/ResultsScreen';
 import { FoodDetailsScreen } from '../screens/main/FoodDetailsScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { HealthGoalsScreen } from '../screens/settings/HealthGoalsScreen';
+import { ProfileInformationScreen } from '../screens/settings/ProfileInformationScreen';
+import { FavoritesScreen } from '../screens/main/FavoritesScreen';
 import { MainTabNavigator } from './MainTabNavigator';
 
 const Stack = createStackNavigator();
@@ -31,6 +33,8 @@ export const AppNavigator = () => {
         <Stack.Screen name="FoodDetails" component={FoodDetailsScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="HealthGoals" component={HealthGoalsScreen} />
+        <Stack.Screen name="ProfileInformation" component={ProfileInformationScreen} />
+        <Stack.Screen name="Favorites" component={FavoritesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

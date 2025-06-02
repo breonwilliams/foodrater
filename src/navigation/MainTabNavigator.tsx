@@ -5,8 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { theme } from '../styles/theme';
 import { CameraScreen } from '../screens/main/CameraScreen';
 import { HistoryScreen } from '../screens/main/HistoryScreen';
-import { FavoritesScreen } from '../screens/main/FavoritesScreen';
 import { ProgressScreen } from '../screens/main/ProgressScreen';
+import { HealthGoalsScreen } from '../screens/settings/HealthGoalsScreen';
 import type { MainTabParamList } from '../types/navigation';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -65,12 +65,12 @@ export const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Favorites"
-        component={FavoritesScreen}
+        name="HealthGoals"
+        component={HealthGoalsScreen}
         options={{
-          tabBarLabel: 'Favorites',
+          tabBarLabel: 'Goals',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart" size={size} color={color} />
+            <Ionicons name="fitness" size={size} color={color} />
           ),
         }}
       />

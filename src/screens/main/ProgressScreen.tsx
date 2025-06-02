@@ -12,9 +12,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import type { MainTabParamList } from '../../types/navigation';
+import type { CompositeNavigationProp } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import type { MainTabParamList, RootStackParamList } from '../../types/navigation';
 
-type ProgressScreenNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Progress'>;
+type ProgressScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabParamList, 'Progress'>,
+  StackNavigationProp<RootStackParamList>
+>;
 
 const { width } = Dimensions.get('window');
 
@@ -62,10 +67,9 @@ const recentFoods = [
 ];
 
 const healthGoals = [
-  { title: 'Eat 5 healthy meals', progress: '5/5', completed: true, icon: 'pulse' },
-  { title: 'Average rating above 7.0', progress: '7.2', completed: true, icon: 'star' },
-  { title: 'Track meals daily', progress: '4/7', completed: false, icon: 'time' },
-  { title: 'Try 3 new healthy foods', progress: '1/3', completed: false, icon: 'leaf' },
+  { title: 'Healthy Eating', progress: '5/5', completed: true, icon: 'leaf-outline', iconColor: '#10b981' },
+  { title: 'Food Quality', progress: '7.2', completed: true, icon: 'star-outline', iconColor: '#f59e0b' },
+  { title: 'Stay Consistent', progress: '4/7', completed: false, icon: 'calendar-outline', iconColor: '#3b82f6' },
 ];
 
 export const ProgressScreen = () => {
@@ -85,15 +89,7 @@ export const ProgressScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={16} color={theme.colors.light.textPrimary} />
-          </TouchableOpacity>
-          <Text style={styles.pageTitle}>Your Progress</Text>
-        </View>
+        <Text style={styles.pageTitle}>Your Progress</Text>
       </View>
 
       <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
@@ -240,7 +236,11 @@ export const ProgressScreen = () => {
         </View>
 
         {/* Health Goals */}
-        <View style={styles.section}>
+        <TouchableOpacity 
+          style={styles.section}
+          onPress={() => navigation.navigate('HealthGoals')}
+          activeOpacity={0.7}
+        >
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Health Goals</Text>
             <View style={styles.timePeriod}>
@@ -253,7 +253,7 @@ export const ProgressScreen = () => {
               <View key={index} style={styles.goalItem}>
                 <View style={styles.goalInfo}>
                   <View style={styles.goalIcon}>
-                    <Ionicons name={goal.icon as any} size={16} color={theme.colors.light.textSecondary} />
+                    <Ionicons name={goal.icon as any} size={18} color={goal.iconColor} />
                   </View>
                   <Text style={styles.goalText}>{goal.title}</Text>
                 </View>
@@ -266,7 +266,7 @@ export const ProgressScreen = () => {
               </View>
             ))}
           </View>
-        </View>
+        </TouchableOpacity>
 
         {/* Bottom Padding */}
         <View style={styles.bottomPadding} />
@@ -283,25 +283,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: theme.colors.light.bgSecondary,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.light.borderLight,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: theme.colors.light.bgTertiary,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   pageTitle: {
     fontSize: 18,
@@ -529,6 +516,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   goalText: {
     fontSize: 14,
     fontWeight: theme.typography.weights.medium,

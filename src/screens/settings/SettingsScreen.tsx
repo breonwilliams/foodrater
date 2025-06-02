@@ -113,7 +113,7 @@ export const SettingsScreen = () => {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Account</Text>
 
-                    <TouchableOpacity style={styles.settingItem}>
+                    <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('ProfileInformation')}>
                         <View style={styles.settingIcon}>
                             <Ionicons name="person" size={20} color={theme.colors.light.textSecondary} />
                         </View>
@@ -124,24 +124,13 @@ export const SettingsScreen = () => {
                         <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('MainTabs')}>
+                    <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Favorites', { from: 'Settings' })}>
                         <View style={styles.settingIcon}>
                             <Ionicons name="heart" size={20} color={theme.colors.light.textSecondary} />
                         </View>
                         <View style={styles.settingContent}>
                             <Text style={styles.settingTitle}>Favorites</Text>
                             <Text style={styles.settingSubtitle}>View your saved foods</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('HealthGoals')}>
-                        <View style={styles.settingIcon}>
-                            <Ionicons name="fitness" size={20} color={theme.colors.light.textSecondary} />
-                        </View>
-                        <View style={styles.settingContent}>
-                            <Text style={styles.settingTitle}>Health Goals</Text>
-                            <Text style={styles.settingSubtitle}>Set your nutrition targets</Text>
                         </View>
                         <Ionicons name="chevron-forward" size={16} color={theme.colors.light.textMuted} />
                     </TouchableOpacity>

@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../../styles/theme';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -43,6 +43,7 @@ export const FavoritesScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const navigation = useNavigation<FavoritesScreenNavigationProp>();
+  const route = useRoute();
 
   // Load favorites when screen comes into focus
   useFocusEffect(
@@ -128,6 +129,16 @@ export const FavoritesScreen = () => {
   const handleFoodPress = (food: FavoriteFood) => {
     navigation.navigate('FoodDetails', { foodId: food.id });
   };
+
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
+
+  // Check if we came from Settings screen
+  const params = route.params as { from?: string } | undefined;
+  const showBackButton = params?.from === 'Settings';
+
+
 
   const getRatingColor = (rating: number) => {
     if (rating >= 8.0) return '#10b981'; // Green
@@ -220,15 +231,19 @@ export const FavoritesScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={20} color={theme.colors.light.textPrimary} />
-          </TouchableOpacity>
+        {showBackButton ? (
+          <View style={styles.headerLeft}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={handleBackPress}
+            >
+              <Ionicons name="arrow-back" size={20} color={theme.colors.light.textPrimary} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Favorites</Text>
+          </View>
+        ) : (
           <Text style={styles.headerTitle}>Favorites</Text>
-        </View>
+        )}
         <TouchableOpacity 
           style={styles.refreshButton}
           onPress={onRefresh}
@@ -315,6 +330,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: theme.typography.weights.semibold,
