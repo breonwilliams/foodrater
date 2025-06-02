@@ -37,6 +37,7 @@ export const CameraScreen = () => {
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const [hasGalleryPermission, setHasGalleryPermission] = useState<boolean | null>(null);
     const [showFloatingTip, setShowFloatingTip] = useState(false);
+    const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
     const navigation = useNavigation<CameraScreenNavigationProp>();
 
     // Request permissions and check if first time user
@@ -60,8 +61,20 @@ export const CameraScreen = () => {
                 console.log('Error checking tip status:', error);
                 setShowFloatingTip(true); // Show tip if we can't check
             }
+
+            // Load unread notifications count
+            loadUnreadNotificationsCount();
         })();
     }, []);
+
+    // Load unread notifications count when screen comes into focus
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            loadUnreadNotificationsCount();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     // Hide tip when user navigates away
     useEffect(() => {
@@ -73,6 +86,22 @@ export const CameraScreen = () => {
 
         return unsubscribe;
     }, [navigation, showFloatingTip]);
+
+    const loadUnreadNotificationsCount = async () => {
+        try {
+            const stored = await AsyncStorage.getItem('notifications');
+            if (stored) {
+                const notifications = JSON.parse(stored);
+                const unreadCount = notifications.filter((notification: any) => !notification.isRead).length;
+                setUnreadNotificationsCount(unreadCount);
+            } else {
+                setUnreadNotificationsCount(2); // Default count for sample data
+            }
+        } catch (error) {
+            console.error('Error loading notifications count:', error);
+            setUnreadNotificationsCount(2); // Default count
+        }
+    };
 
     const hideTipPermanently = async () => {
         try {
@@ -216,6 +245,19 @@ export const CameraScreen = () => {
                     <Text style={styles.appName}>Food Rater</Text>
                 </View>
                 <View style={styles.headerRight}>
+                    <TouchableOpacity
+                        style={styles.iconBtn}
+                        onPress={() => navigation.navigate('Notifications')}
+                    >
+                        <Ionicons name="notifications-outline" size={16} color={theme.colors.light.textSecondary} />
+                        {unreadNotificationsCount > 0 && (
+                            <View style={styles.notificationBadge}>
+                                <Text style={styles.notificationBadgeText}>
+                                    {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
+                                </Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.iconBtn}
                         onPress={() => navigation.navigate('Settings')}
@@ -473,6 +515,25 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.light.bgTertiary,
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'relative',
+    },
+    notificationBadge: {
+        position: 'absolute',
+        top: -2,
+        right: -2,
+        backgroundColor: '#ef4444',
+        borderRadius: 8,
+        minWidth: 16,
+        height: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 4,
+    },
+    notificationBadgeText: {
+        color: 'white',
+        fontSize: 10,
+        fontWeight: theme.typography.weights.bold,
+        lineHeight: 12,
     },
     mainContent: {
         flex: 1,

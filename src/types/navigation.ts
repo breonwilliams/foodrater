@@ -14,6 +14,7 @@ export type RootStackParamList = {
   ClearCache: undefined;
   PrivacyPolicy: undefined;
   TermsOfService: undefined;
+  Notifications: undefined;
   // Add more screens as we create them
 };
 

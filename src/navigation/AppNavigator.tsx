@@ -15,6 +15,7 @@ import { ClearCacheScreen } from '../screens/settings/ClearCacheScreen';
 import { PrivacyPolicyScreen } from '../screens/settings/PrivacyPolicyScreen';
 import { TermsOfServiceScreen } from '../screens/settings/TermsOfServiceScreen';
 import { FavoritesScreen } from '../screens/main/FavoritesScreen';
+import { NotificationsScreen } from '../screens/main/NotificationsScreen';
 import { MainTabNavigator } from './MainTabNavigator';
 
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ export const AppNavigator = () => {
         <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="TermsOfService" component={TermsOfServiceScreen} />
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
