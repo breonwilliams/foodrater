@@ -258,6 +258,11 @@ export const ResultsScreen = () => {
             <Text style={styles.primaryActionText}>Scan Another Food</Text>
           </TouchableOpacity>
           
+          <TouchableOpacity style={styles.shareToProfileAction} onPress={() => navigation.navigate('ShareFood', { foodData: analysisResult })}>
+            <Ionicons name="people-outline" size={20} color={theme.colors.light.textSecondary} />
+            <Text style={styles.shareToProfileText}>Share to Profile</Text>
+          </TouchableOpacity>
+          
           <TouchableOpacity style={styles.secondaryAction} onPress={handleSaveResult}>
             <Ionicons name="bookmark-outline" size={20} color={theme.colors.light.textSecondary} />
             <Text style={styles.secondaryActionText}>Save to History</Text>
@@ -516,6 +521,23 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.light.borderLight,
   },
   secondaryActionText: {
+    color: theme.colors.light.textSecondary,
+    fontSize: 16,
+    fontWeight: theme.typography.weights.semibold,
+  },
+  shareToProfileAction: {
+    backgroundColor: theme.colors.light.bgSecondary,
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.light.borderLight,
+  },
+  shareToProfileText: {
     color: theme.colors.light.textSecondary,
     fontSize: 16,
     fontWeight: theme.typography.weights.semibold,

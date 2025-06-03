@@ -260,9 +260,9 @@ export const CameraScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.iconBtn}
-                        onPress={() => navigation.navigate('Settings')}
+                        onPress={() => navigation.navigate('Profile')}
                     >
-                        <Ionicons name="person" size={16} color={theme.colors.light.textSecondary} />
+                        <Ionicons name="person-outline" size={16} color={theme.colors.light.textSecondary} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -271,6 +271,8 @@ export const CameraScreen = () => {
                 style={styles.mainContent}
                 onScroll={handleScroll}
                 scrollEventThrottle={16}
+                contentInsetAdjustmentBehavior="never"
+                contentContainerStyle={styles.scrollContent}
             >
                 {/* Welcome Section */}
                 <View style={styles.welcomeSection}>
@@ -363,8 +365,7 @@ export const CameraScreen = () => {
                     </View>
                 </View>
 
-                {/* Bottom Padding */}
-                <View style={styles.bottomPadding} />
+
             </ScrollView>
 
             {/* Floating Tip */}
@@ -537,6 +538,9 @@ const styles = StyleSheet.create({
     },
     mainContent: {
         flex: 1,
+    },
+    scrollContent: {
+        paddingBottom: 0,
     },
     welcomeSection: {
         padding: 24,
@@ -735,9 +739,7 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontWeight: theme.typography.weights.medium,
     },
-    bottomPadding: {
-        height: 40,
-    },
+
     floatingTip: {
         position: 'absolute',
         bottom: 80,

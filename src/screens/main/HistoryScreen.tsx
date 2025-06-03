@@ -362,6 +362,8 @@ export const HistoryScreen = () => {
           style={styles.historyList}
           showsVerticalScrollIndicator={false}
           stickySectionHeadersEnabled={false}
+          contentInsetAdjustmentBehavior="never"
+          contentContainerStyle={styles.sectionListContent}
         />
       ) : (
         <View style={styles.emptyState}>
@@ -491,6 +493,9 @@ const styles = StyleSheet.create({
   historyList: {
     flex: 1,
     backgroundColor: theme.colors.light.bgPrimary,
+  },
+  sectionListContent: {
+    paddingBottom: 0,
   },
   sectionHeader: {
     flexDirection: 'row',

@@ -16,6 +16,9 @@ import { PrivacyPolicyScreen } from '../screens/settings/PrivacyPolicyScreen';
 import { TermsOfServiceScreen } from '../screens/settings/TermsOfServiceScreen';
 import { FavoritesScreen } from '../screens/main/FavoritesScreen';
 import { NotificationsScreen } from '../screens/main/NotificationsScreen';
+import { FeedScreen } from '../screens/social/FeedScreen';
+import { ProfileScreen } from '../screens/social/ProfileScreen';
+import { ShareFoodScreen } from '../screens/main/ShareFoodScreen';
 import { MainTabNavigator } from './MainTabNavigator';
 
 const Stack = createStackNavigator();
@@ -45,6 +48,9 @@ export const AppNavigator = () => {
         <Stack.Screen name="TermsOfService" component={TermsOfServiceScreen} />
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
+        <Stack.Screen name="Feed" component={FeedScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="ShareFood" component={ShareFoodScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

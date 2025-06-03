@@ -12,6 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../styles/theme';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import type { RootStackParamList } from '../../types/navigation';
+
+type HealthGoalsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HealthGoals'>;
 
 interface GoalColors {
     main: string;
@@ -304,6 +309,7 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal, onThreeDotsPress }) => {
 };
 
 export const HealthGoalsScreen = () => {
+    const navigation = useNavigation<HealthGoalsScreenNavigationProp>();
 
     // State for goal targets
     const [healthyMealsTarget, setHealthyMealsTarget] = useState(5);
@@ -414,7 +420,14 @@ export const HealthGoalsScreen = () => {
         <SafeAreaView style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
+                <TouchableOpacity 
+                    style={styles.backButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Ionicons name="arrow-back" size={20} color={theme.colors.light.textPrimary} />
+                </TouchableOpacity>
                 <Text style={styles.headerTitle}>Health Goals</Text>
+                <View style={styles.headerPlaceholder} />
             </View>
 
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -486,8 +499,9 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.light.bgPrimary,
     },
     header: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal: 20,
         paddingVertical: 16,
         backgroundColor: theme.colors.light.bgSecondary,
@@ -506,6 +520,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: theme.typography.weights.semibold,
         color: theme.colors.light.textPrimary,
+        flex: 1,
+        textAlign: 'center',
     },
     headerPlaceholder: {
         width: 40,

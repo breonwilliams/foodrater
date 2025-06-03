@@ -15,15 +15,18 @@ export type RootStackParamList = {
   PrivacyPolicy: undefined;
   TermsOfService: undefined;
   Notifications: undefined;
+  Feed: undefined;
+  Profile: undefined;
+  ShareFood: { foodData: any } | undefined;
   // Add more screens as we create them
 };
 
 export type MainTabParamList = {
   Camera: undefined;
+  Feed: undefined;
   History: undefined;
-  HealthGoals: undefined;
   Progress: undefined;
-  Favorites: undefined;
+  Profile: undefined;
 };
 
 declare global {

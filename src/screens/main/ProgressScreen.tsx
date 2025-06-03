@@ -229,9 +229,21 @@ export const ProgressScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Your Progress</Text>
+        <TouchableOpacity 
+          style={styles.goalsButton}
+          onPress={() => navigation.navigate('HealthGoals')}
+        >
+          <Ionicons name="flag-outline" size={16} color={theme.colors.light.textSecondary} />
+          <Text style={styles.goalsButtonText}>Goals</Text>
+        </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.mainContent} 
+        showsVerticalScrollIndicator={false} 
+        contentInsetAdjustmentBehavior="never"
+        contentContainerStyle={styles.scrollContent}
+      >
         
         {/* Hero Stats */}
         <View style={styles.heroStats}>
@@ -412,8 +424,7 @@ export const ProgressScreen = () => {
           </View>
         </TouchableOpacity>
 
-        {/* Bottom Padding */}
-        <View style={styles.bottomPadding} />
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -427,7 +438,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: theme.colors.light.bgSecondary,
@@ -438,11 +449,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: theme.typography.weights.semibold,
     color: theme.colors.light.textPrimary,
+    flex: 1,
+  },
+  goalsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.light.bgSecondary,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: theme.colors.light.borderLight,
+    gap: 6,
+  },
+  goalsButtonText: {
+    fontSize: 14,
+    fontWeight: theme.typography.weights.medium,
+    color: theme.colors.light.textSecondary,
   },
 
   mainContent: {
     flex: 1,
     padding: 20,
+  },
+  scrollContent: {
+    paddingBottom: 0,
   },
   heroStats: {
     flexDirection: 'row',
@@ -673,7 +704,5 @@ const styles = StyleSheet.create({
   goalProgressCompleted: {
     color: '#10b981',
   },
-  bottomPadding: {
-    height: 20,
-  },
+
 });
