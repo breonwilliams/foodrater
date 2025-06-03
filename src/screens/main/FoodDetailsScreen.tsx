@@ -33,63 +33,48 @@ const foodData = {
   servingSize: '1 bowl (250g)',
   image: null, // Would be actual image URI
   details: 'Brown quinoa, roasted vegetables, feta cheese, olive oil dressing',
-  nutritionFacts: {
-    calories: 320,
-    protein: '14g',
-    carbs: '42g',
-    fat: '12g',
-    fiber: '6g',
-    sugar: '8g',
-    sodium: '420mg',
-  },
   criteria: [
     {
       name: "Nutrient Density",
       score: 9.2,
       icon: "nutrition",
       color: "#10b981",
-      description: "Rich in vitamins, minerals, and antioxidants",
-      details: "Excellent source of complete protein from quinoa, vitamin A from vegetables, and healthy fats from olive oil."
+      description: "Rich in vitamins, minerals, and antioxidants"
     },
     {
       name: "Processing Level",
       score: 8.8,
       icon: "leaf",
       color: "#3b82f6", 
-      description: "Minimally processed, whole food ingredients",
-      details: "Whole grain quinoa and fresh vegetables with minimal processing. Olive oil is cold-pressed."
+      description: "Minimally processed, whole food ingredients"
     },
     {
       name: "Sugar Content",
       score: 9.0,
       icon: "water",
       color: "#8b5cf6",
-      description: "Low added sugars, natural sweetness",
-      details: "Natural sugars from vegetables only. No added sweeteners or refined sugars detected."
+      description: "Low added sugars, natural sweetness"
     },
     {
       name: "Healthy Fats",
       score: 7.5,
       icon: "heart",
       color: "#f59e0b",
-      description: "Good source of omega-3 and monounsaturated fats",
-      details: "Olive oil provides monounsaturated fats. Could benefit from omega-3 rich additions like walnuts."
+      description: "Good source of omega-3 and monounsaturated fats"
     },
     {
       name: "Glycemic Impact",
       score: 8.2,
       icon: "trending-down",
       color: "#06b6d4",
-      description: "Low glycemic index, steady energy release",
-      details: "Quinoa and fiber from vegetables help maintain stable blood sugar levels."
+      description: "Low glycemic index, steady energy release"
     },
     {
       name: "Inflammation",
       score: 8.8,
       icon: "shield-checkmark",
       color: "#84cc16",
-      description: "Anti-inflammatory ingredients",
-      details: "Olive oil and colorful vegetables provide anti-inflammatory compounds."
+      description: "Anti-inflammatory ingredients"
     }
   ],
   recommendations: [
@@ -102,7 +87,6 @@ const foodData = {
 };
 
 export const FoodDetailsScreen = () => {
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'nutrition' | 'analysis'>('overview');
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation<FoodDetailsScreenNavigationProp>();
@@ -225,6 +209,10 @@ export const FoodDetailsScreen = () => {
     }
   };
 
+  const handleScanAnother = () => {
+    navigation.navigate('MainTabs');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -281,12 +269,9 @@ export const FoodDetailsScreen = () => {
 
           <View style={styles.foodInfo}>
             <Text style={styles.foodName}>{foodData.name}</Text>
-            <Text style={styles.foodMeta}>
-              {foodData.category} • {foodData.calories} calories • {foodData.date}
+            <Text style={styles.foodCategory}>
+              {foodData.category} • {foodData.calories} calories
             </Text>
-            {foodData.details && (
-              <Text style={styles.foodDetails}>{foodData.details}</Text>
-            )}
           </View>
 
           {/* Tags */}
@@ -299,173 +284,74 @@ export const FoodDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Tab Navigation */}
-        <View style={styles.tabNavigation}>
-          <TouchableOpacity 
-            style={[styles.tab, selectedTab === 'overview' && styles.activeTab]}
-            onPress={() => setSelectedTab('overview')}
-          >
-            <Text style={[styles.tabText, selectedTab === 'overview' && styles.activeTabText]}>
-              Overview
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.tab, selectedTab === 'nutrition' && styles.activeTab]}
-            onPress={() => setSelectedTab('nutrition')}
-          >
-            <Text style={[styles.tabText, selectedTab === 'nutrition' && styles.activeTabText]}>
-              Nutrition
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.tab, selectedTab === 'analysis' && styles.activeTab]}
-            onPress={() => setSelectedTab('analysis')}
-          >
-            <Text style={[styles.tabText, selectedTab === 'analysis' && styles.activeTabText]}>
-              Analysis
-            </Text>
-          </TouchableOpacity>
+        {/* Health Summary Card */}
+        <View style={styles.summaryCard}>
+          <View style={styles.summaryHeader}>
+            <Ionicons name="checkmark-circle" size={20} color="#10b981" />
+            <Text style={styles.summaryTitle}>Health Summary</Text>
+          </View>
+          <Text style={styles.summaryText}>
+            This is a <Text style={styles.summaryHighlight}>nutritious choice</Text> with excellent nutrient density and minimal processing. Great for sustained energy and overall health!
+          </Text>
         </View>
 
-        {/* Tab Content */}
-        {selectedTab === 'overview' && (
-          <View style={styles.tabContent}>
-            {/* Quick Stats */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Quick Stats</Text>
-              <View style={styles.statsGrid}>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{foodData.nutritionFacts.calories}</Text>
-                  <Text style={styles.statLabel}>Calories</Text>
-                </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{foodData.nutritionFacts.protein}</Text>
-                  <Text style={styles.statLabel}>Protein</Text>
-                </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{foodData.nutritionFacts.fiber}</Text>
-                  <Text style={styles.statLabel}>Fiber</Text>
-                </View>
-              </View>
-            </View>
-
-            {/* Top Recommendations */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Recommendations</Text>
-              {foodData.recommendations.slice(0, 2).map((rec, index) => (
-                <View key={index} style={styles.recommendationItem}>
-                  <View style={styles.recommendationIcon}>
-                    <Ionicons name="bulb" size={16} color={theme.colors.light.accentYellow.replace('#', '#')} />
-                  </View>
-                  <Text style={styles.recommendationText}>{rec}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {selectedTab === 'nutrition' && (
-          <View style={styles.tabContent}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Nutrition Facts</Text>
-              <Text style={styles.servingSize}>Per {foodData.servingSize}</Text>
-              
-              <View style={styles.nutritionGrid}>
-                {Object.entries(foodData.nutritionFacts).map(([key, value]) => (
-                  <View key={key} style={styles.nutritionItem}>
-                    <Text style={styles.nutritionLabel}>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </Text>
-                    <Text style={styles.nutritionValue}>{value}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            {/* Macronutrient Breakdown */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Macronutrient Breakdown</Text>
-              <View style={styles.macroChart}>
-                <View style={styles.macroItem}>
-                  <View style={[styles.macroColor, { backgroundColor: '#10b981' }]} />
-                  <Text style={styles.macroLabel}>Protein ({foodData.nutritionFacts.protein})</Text>
-                </View>
-                <View style={styles.macroItem}>
-                  <View style={[styles.macroColor, { backgroundColor: '#3b82f6' }]} />
-                  <Text style={styles.macroLabel}>Carbs ({foodData.nutritionFacts.carbs})</Text>
-                </View>
-                <View style={styles.macroItem}>
-                  <View style={[styles.macroColor, { backgroundColor: '#f59e0b' }]} />
-                  <Text style={styles.macroLabel}>Fat ({foodData.nutritionFacts.fat})</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-
-        {selectedTab === 'analysis' && (
-          <View style={styles.tabContent}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Detailed Health Analysis</Text>
-              
-              {foodData.criteria.map((criterion, index) => (
-                <View key={criterion.name} style={styles.criterionCard}>
-                  <View style={styles.criterionHeader}>
-                    <View style={[styles.criterionIcon, { backgroundColor: `${criterion.color}20` }]}>
-                      <Ionicons name={criterion.icon as any} size={20} color={criterion.color} />
-                    </View>
-                    <View style={styles.criterionInfo}>
-                      <Text style={styles.criterionName}>{criterion.name}</Text>
-                      <Text style={styles.criterionScore}>{criterion.score}/10</Text>
-                    </View>
-                  </View>
-                  
-                  <Text style={styles.criterionDescription}>{criterion.description}</Text>
-                  <Text style={styles.criterionDetails}>{criterion.details}</Text>
-                  
-                  {/* Progress Bar */}
-                  <View style={styles.progressContainer}>
-                    <View style={styles.progressTrack}>
-                      <View 
-                        style={[
-                          styles.progressFill,
-                          { 
-                            backgroundColor: criterion.color,
-                            width: `${criterion.score * 10}%`,
-                          },
-                        ]} 
-                      />
-                    </View>
-                  </View>
-                </View>
-              ))}
-            </View>
-
-            {/* All Recommendations */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>All Recommendations</Text>
-              {foodData.recommendations.map((rec, index) => (
-                <View key={index} style={styles.recommendationItem}>
-                  <View style={styles.recommendationIcon}>
-                    <Ionicons name="bulb" size={16} color={theme.colors.light.accentYellow.replace('#', '#')} />
-                  </View>
-                  <Text style={styles.recommendationText}>{rec}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {/* Bottom Actions */}
-        <View style={styles.bottomActions}>
-          <TouchableOpacity style={styles.secondaryAction}>
-            <Ionicons name="analytics" size={20} color={theme.colors.light.textSecondary} />
-            <Text style={styles.secondaryActionText}>Compare Foods</Text>
-          </TouchableOpacity>
+        {/* Detailed Analysis */}
+        <View style={styles.criteriaSection}>
+          <Text style={styles.sectionTitle}>Detailed Analysis</Text>
           
-          <TouchableOpacity style={styles.primaryAction} onPress={() => navigation.navigate('MainTabs')}>
+          {foodData.criteria.map((criterion, index) => (
+            <View key={criterion.name} style={styles.criterionCard}>
+              <View style={styles.criterionHeader}>
+                <View style={[styles.criterionIcon, { backgroundColor: `${criterion.color}20` }]}>
+                  <Ionicons name={criterion.icon as any} size={20} color={criterion.color} />
+                </View>
+                <View style={styles.criterionInfo}>
+                  <Text style={styles.criterionName}>{criterion.name}</Text>
+                  <Text style={styles.criterionDescription}>{criterion.description}</Text>
+                </View>
+                <View style={styles.criterionScore}>
+                  <Text style={[styles.scoreNumber, { color: criterion.color }]}>
+                    {criterion.score}
+                  </Text>
+                </View>
+              </View>
+              
+              {/* Progress Bar */}
+              <View style={styles.progressContainer}>
+                <View style={styles.progressTrack}>
+                  <View 
+                    style={[
+                      styles.progressFill,
+                      { 
+                        backgroundColor: criterion.color,
+                        width: `${criterion.score * 10}%`,
+                      },
+                    ]} 
+                  />
+                </View>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        {/* Recommendations */}
+        <View style={styles.recommendationsSection}>
+          <Text style={styles.sectionTitle}>Recommendations</Text>
+          {foodData.recommendations.map((recommendation, index) => (
+            <View key={index} style={styles.recommendationItem}>
+              <View style={styles.recommendationIcon}>
+                <Ionicons name="bulb" size={16} color={theme.colors.light.accentYellow.replace('#', '#')} />
+              </View>
+              <Text style={styles.recommendationText}>{recommendation}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Action Buttons */}
+        <View style={styles.actionSection}>
+          <TouchableOpacity style={styles.primaryAction} onPress={handleScanAnother}>
             <Ionicons name="camera" size={20} color="white" />
-            <Text style={styles.primaryActionText}>Scan Another</Text>
+            <Text style={styles.primaryActionText}>Scan Another Food</Text>
           </TouchableOpacity>
         </View>
 
@@ -558,12 +444,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   ratingScore: {
-    fontSize: 48,
+    fontSize: 64,
     fontWeight: theme.typography.weights.bold,
-    lineHeight: 52,
+    lineHeight: 70,
   },
   ratingLabel: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: theme.typography.weights.semibold,
     color: theme.colors.light.textSecondary,
     marginTop: 4,
@@ -577,20 +463,12 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.light.textPrimary,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 4,
   },
-  foodMeta: {
+  foodCategory: {
     fontSize: 14,
     color: theme.colors.light.textSecondary,
     textAlign: 'center',
-    marginBottom: 8,
-  },
-  foodDetails: {
-    fontSize: 14,
-    color: theme.colors.light.textTertiary,
-    textAlign: 'center',
-    lineHeight: 20,
-    paddingHorizontal: 20,
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -609,121 +487,47 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.weights.medium,
     color: theme.colors.light.textSecondary,
   },
-  tabNavigation: {
-    flexDirection: 'row',
-    backgroundColor: theme.colors.light.bgSecondary,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-    padding: 4,
-    borderWidth: 1,
-    borderColor: theme.colors.light.borderLight,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  activeTab: {
-    backgroundColor: theme.colors.light.accentDark,
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: theme.typography.weights.medium,
-    color: theme.colors.light.textSecondary,
-  },
-  activeTabText: {
-    color: 'white',
-  },
-  tabContent: {
-    paddingHorizontal: 20,
-  },
-  section: {
+  summaryCard: {
     backgroundColor: theme.colors.light.bgSecondary,
     borderRadius: 16,
     padding: 20,
-    marginBottom: 16,
+    marginHorizontal: 20,
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: theme.colors.light.borderLight,
+  },
+  summaryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  summaryTitle: {
+    fontSize: 16,
+    fontWeight: theme.typography.weights.semibold,
+    color: theme.colors.light.textPrimary,
+  },
+  summaryText: {
+    fontSize: 14,
+    color: theme.colors.light.textSecondary,
+    lineHeight: 20,
+  },
+  summaryHighlight: {
+    fontWeight: theme.typography.weights.semibold,
+    color: '#10b981',
+  },
+  criteriaSection: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: theme.typography.weights.bold,
-    color: theme.colors.light.textPrimary,
-    marginBottom: 16,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: theme.colors.light.bgPrimary,
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.light.borderLight,
-  },
-  statValue: {
     fontSize: 20,
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.light.textPrimary,
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: theme.colors.light.textSecondary,
-    fontWeight: theme.typography.weights.medium,
-  },
-  servingSize: {
-    fontSize: 14,
-    color: theme.colors.light.textSecondary,
     marginBottom: 16,
-    fontStyle: 'italic',
-  },
-  nutritionGrid: {
-    gap: 8,
-  },
-  nutritionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.light.borderLight,
-  },
-  nutritionLabel: {
-    fontSize: 14,
-    color: theme.colors.light.textSecondary,
-    fontWeight: theme.typography.weights.medium,
-  },
-  nutritionValue: {
-    fontSize: 14,
-    color: theme.colors.light.textPrimary,
-    fontWeight: theme.typography.weights.semibold,
-  },
-  macroChart: {
-    gap: 12,
-  },
-  macroItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  macroColor: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-  },
-  macroLabel: {
-    fontSize: 14,
-    color: theme.colors.light.textSecondary,
-    fontWeight: theme.typography.weights.medium,
   },
   criterionCard: {
-    backgroundColor: theme.colors.light.bgPrimary,
+    backgroundColor: theme.colors.light.bgSecondary,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -752,22 +556,16 @@ const styles = StyleSheet.create({
     color: theme.colors.light.textPrimary,
     marginBottom: 2,
   },
-  criterionScore: {
-    fontSize: 14,
-    fontWeight: theme.typography.weights.bold,
-    color: theme.colors.light.textSecondary,
-  },
   criterionDescription: {
-    fontSize: 14,
+    fontSize: 12,
     color: theme.colors.light.textSecondary,
-    marginBottom: 8,
-    fontWeight: theme.typography.weights.medium,
   },
-  criterionDetails: {
-    fontSize: 13,
-    color: theme.colors.light.textTertiary,
-    lineHeight: 18,
-    marginBottom: 12,
+  criterionScore: {
+    alignItems: 'center',
+  },
+  scoreNumber: {
+    fontSize: 18,
+    fontWeight: theme.typography.weights.bold,
   },
   progressContainer: {
     marginTop: 8,
@@ -782,10 +580,14 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 2,
   },
+  recommendationsSection: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
   recommendationItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: theme.colors.light.bgPrimary,
+    backgroundColor: theme.colors.light.bgSecondary,
     borderRadius: 12,
     padding: 16,
     marginBottom: 8,
@@ -808,27 +610,9 @@ const styles = StyleSheet.create({
     color: theme.colors.light.textSecondary,
     lineHeight: 20,
   },
-  bottomActions: {
+  actionSection: {
     paddingHorizontal: 20,
     gap: 12,
-    marginTop: 8,
-  },
-  secondaryAction: {
-    backgroundColor: theme.colors.light.bgSecondary,
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    borderWidth: 1,
-    borderColor: theme.colors.light.borderLight,
-  },
-  secondaryActionText: {
-    color: theme.colors.light.textSecondary,
-    fontSize: 16,
-    fontWeight: theme.typography.weights.semibold,
   },
   primaryAction: {
     backgroundColor: theme.colors.light.accentDark,
