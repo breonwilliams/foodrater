@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../styles/theme';
+import { FoodDetailsBottomSheet } from './FoodDetailsBottomSheet';
+import type { UserProfile } from '../../data/mockSocialData';
 
 export interface SocialPost {
   id: string;
@@ -38,14 +40,15 @@ export interface SocialPost {
 
 interface PostCardProps {
   post: SocialPost;
+  currentUser: UserProfile;
   onLike: (postId: string) => void;
-  onComment: (postId: string) => void;
+  onComment: (postId: string, comment: string) => void;
   onSave: (postId: string) => void;
-  onViewDetails: (post: SocialPost) => void;
   onUserPress: (userId: string) => void;
 }
 
-export const PostCard = ({ post, onLike, onComment, onSave, onViewDetails, onUserPress }: PostCardProps) => {
+export const PostCard = ({ post, currentUser, onLike, onComment, onSave, onUserPress }: PostCardProps) => {
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
   const getRatingColor = (rating: number) => {
     if (rating >= 8.0) return '#10b981'; // Excellent - Green
     if (rating >= 6.0) return '#3b82f6'; // Good - Blue  
@@ -110,7 +113,7 @@ export const PostCard = ({ post, onLike, onComment, onSave, onViewDetails, onUse
           
           <TouchableOpacity 
             style={styles.actionButton}
-            onPress={() => onComment(post.id)}
+            onPress={() => setShowBottomSheet(true)}
             activeOpacity={0.7}
           >
             <Ionicons name="chatbubble-outline" size={22} color={theme.colors.light.textSecondary} />
@@ -133,7 +136,7 @@ export const PostCard = ({ post, onLike, onComment, onSave, onViewDetails, onUse
         <View style={styles.ratingContainer}>
           <Ionicons name="star" size={16} color={getRatingColor(post.foodData.rating)} />
           <Text style={[styles.ratingText, { color: getRatingColor(post.foodData.rating) }]}>
-            {post.foodData.rating}
+            {post.foodData.rating.toString()}
           </Text>
         </View>
       </View>
@@ -142,7 +145,7 @@ export const PostCard = ({ post, onLike, onComment, onSave, onViewDetails, onUse
       <View style={styles.postContent}>
         <Text style={styles.foodName}>{post.foodData.name}</Text>
         <Text style={styles.foodMeta}>
-          {post.foodData.category} • {post.foodData.calories} cal
+          {post.foodData.category} • {post.foodData.calories.toString()} cal
         </Text>
         
         {post.caption && (
@@ -156,13 +159,24 @@ export const PostCard = ({ post, onLike, onComment, onSave, onViewDetails, onUse
         {/* View Details Button */}
         <TouchableOpacity 
           style={styles.viewDetailsButton}
-          onPress={() => onViewDetails(post)}
+          onPress={() => setShowBottomSheet(true)}
           activeOpacity={0.7}
         >
           <Text style={styles.viewDetailsText}>View Full Analysis</Text>
           <Ionicons name="chevron-up" size={16} color={theme.colors.light.textSecondary} />
         </TouchableOpacity>
       </View>
+      
+      {/* Food Details Bottom Sheet */}
+      <FoodDetailsBottomSheet
+        post={post}
+        isVisible={showBottomSheet}
+        onClose={() => setShowBottomSheet(false)}
+        currentUser={currentUser}
+        onLike={onLike}
+        onSave={onSave}
+        onComment={onComment}
+      />
     </View>
   );
 };

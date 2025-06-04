@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 0,
+    paddingBottom: 100, // Extra padding for bottom tab navigation
   },
   heroStats: {
     flexDirection: 'row',

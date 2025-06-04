@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.light.bgPrimary,
   },
   sectionListContent: {
-    paddingBottom: 0,
+    paddingBottom: 100, // Extra padding for bottom tab navigation
   },
   sectionHeader: {
     flexDirection: 'row',

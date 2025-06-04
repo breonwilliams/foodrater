@@ -26,6 +26,12 @@ export interface FoodPost {
   isPublic: boolean;
   createdAt: string;
   foodData: any; // Complete food analysis data
+  
+  // Add social interaction fields
+  likesCount?: number;
+  commentsCount?: number;
+  isLiked?: boolean;
+  isSaved?: boolean;
 }
 
 export const mockUserProfile: UserProfile = {
@@ -60,7 +66,11 @@ export const mockFoodPosts: FoodPost[] = [
       category: 'Healthy Bowl',
       rating: 8.5,
       calories: 320,
-    }
+    },
+    likesCount: 12,
+    commentsCount: 3,
+    isLiked: false,
+    isSaved: false,
   },
   {
     id: 'post_2',
@@ -78,7 +88,11 @@ export const mockFoodPosts: FoodPost[] = [
       category: 'Breakfast',
       rating: 9.1,
       calories: 180,
-    }
+    },
+    likesCount: 8,
+    commentsCount: 1,
+    isLiked: true,
+    isSaved: false,
   },
   {
     id: 'post_3',
@@ -96,7 +110,11 @@ export const mockFoodPosts: FoodPost[] = [
       category: 'Breakfast',
       rating: 7.8,
       calories: 250,
-    }
+    },
+    likesCount: 15,
+    commentsCount: 2,
+    isLiked: false,
+    isSaved: true,
   },
   {
     id: 'post_4',
@@ -114,7 +132,11 @@ export const mockFoodPosts: FoodPost[] = [
       category: 'Dinner',
       rating: 9.2,
       calories: 420,
-    }
+    },
+    likesCount: 22,
+    commentsCount: 5,
+    isLiked: true,
+    isSaved: true,
   },
   {
     id: 'post_5',
@@ -132,7 +154,11 @@ export const mockFoodPosts: FoodPost[] = [
       category: 'Smoothie',
       rating: 8.7,
       calories: 160,
-    }
+    },
+    likesCount: 9,
+    commentsCount: 1,
+    isLiked: false,
+    isSaved: false,
   },
   {
     id: 'post_6',
@@ -150,7 +176,11 @@ export const mockFoodPosts: FoodPost[] = [
       category: 'Dinner',
       rating: 8.3,
       calories: 380,
-    }
+    },
+    likesCount: 18,
+    commentsCount: 4,
+    isLiked: false,
+    isSaved: false,
   },
 ];
 

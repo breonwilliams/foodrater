@@ -16,7 +16,7 @@ export type RootStackParamList = {
   TermsOfService: undefined;
   Notifications: undefined;
   Feed: undefined;
-  Profile: undefined;
+  Profile: { userId?: string; username?: string } | undefined;
   ShareFood: { foodData: any } | undefined;
   // Add more screens as we create them
 };

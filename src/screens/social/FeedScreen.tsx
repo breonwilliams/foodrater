@@ -132,9 +132,17 @@ export const FeedScreen = () => {
     console.log('Like toggled for post:', postId);
   };
 
-  const handleComment = (postId: string) => {
-    Alert.alert('Comments', 'Comments functionality coming soon!');
-    // TODO: Navigate to PostDetailsScreen with comments focus
+  const handleComment = (postId: string, comment: string) => {
+    // Update post comment count
+    setPosts(prevPosts => 
+      prevPosts.map(post => 
+        post.id === postId 
+          ? { ...post, commentsCount: post.commentsCount + 1 }
+          : post
+      )
+    );
+    
+    console.log('Comment added to post:', postId, comment);
   };
 
   const handleSave = async (postId: string) => {
@@ -151,13 +159,7 @@ export const FeedScreen = () => {
     console.log('Save toggled for post:', postId);
   };
 
-  const handleViewDetails = (post: SocialPost) => {
-    Alert.alert(
-      'Food Details', 
-      `Opening details for ${post.foodData.name}\nRating: ${post.foodData.rating}\nCalories: ${post.foodData.calories}`
-    );
-    // TODO: Open FoodDetailsBottomSheet
-  };
+
 
   const handleUserPress = (userId: string) => {
     Alert.alert('User Profile', `Opening profile for user: ${userId}`);
@@ -172,10 +174,10 @@ export const FeedScreen = () => {
   const renderPost = ({ item }: { item: SocialPost }) => (
     <PostCard
       post={item}
+      currentUser={currentUser}
       onLike={handleLike}
       onComment={handleComment}
       onSave={handleSave}
-      onViewDetails={handleViewDetails}
       onUserPress={handleUserPress}
     />
   );
@@ -313,7 +315,7 @@ const styles = StyleSheet.create({
   },
   feedContent: {
     paddingTop: 8,
-    paddingBottom: 0,
+    paddingBottom: 100, // Extra padding for bottom tab navigation
   },
   feedContentEmpty: {
     flexGrow: 1,

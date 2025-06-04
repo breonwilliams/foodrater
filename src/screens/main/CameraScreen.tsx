@@ -258,12 +258,6 @@ export const CameraScreen = () => {
                             </View>
                         )}
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.iconBtn}
-                        onPress={() => navigation.navigate('Profile')}
-                    >
-                        <Ionicons name="person-outline" size={16} color={theme.colors.light.textSecondary} />
-                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -540,7 +534,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollContent: {
-        paddingBottom: 0,
+        paddingBottom: 100, // Extra padding for bottom tab navigation
     },
     welcomeSection: {
         padding: 24,
